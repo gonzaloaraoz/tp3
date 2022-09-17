@@ -51,14 +51,14 @@
  */
 
 /* === Inclusiones de cabeceras ============================================ */
-#include "digital.h"
-#include "chip.h"
+#include <digital.h>
+#include <chip.h>
 
 /* === Definicion y Macros privados ======================================== */
 
 struct digital_output_s{
-    uint8_t port;
-    uint8_t pin;
+    uint8_t gpio;
+    uint8_t bit;
 };
 
 
@@ -71,17 +71,17 @@ static struct digital_output_s instance;
 
 /* === Definiciones de variables publicas ================================== */
 
-digital_output_t DigitalOutputCreate(uint8_t port, uint8_t pin){
-    instance.port = port;
-    instance.pin = pin;
+digital_output_t DigitalOutputCreate(uint8_t gpio, uint8_t bit){
+    instance.gpio = gpio;
+    instance.bit = bit;
     return &instance;
 }
 void DigitalOutputActivate(digital_output_t output){
-    Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->port, output->pin,true);
+    Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->gpio, output->bit,true);
 
 }
 void DigitalOutputDeactivate(digital_output_t output){
-    Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->port, output->pin,false);
+    Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->gpio, output->bit,false);
 }
 void DigitalOutputToggle(digital_output_t output){
 }
