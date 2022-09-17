@@ -40,8 +40,8 @@
 
 /* === Headers files inclusions =============================================================== */
 
-#include "chip.h"
-#include "digital.h"
+#include <chip.h>
+#include <digital.h>
 #include <stdbool.h>
 
 /* === Macros definitions ====================================================================== */
