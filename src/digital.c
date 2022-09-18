@@ -55,26 +55,65 @@
 #include <chip.h>
 
 /* === Definicion y Macros privados ======================================== */
-
-struct digital_output_s{
-    uint8_t gpio;
-    uint8_t bit;
-};
+#ifndef OUTPUT_INSTANCE
+ #define OUTPUT_INSTANCE 4
+#endif
 
 
 /* === Declaraciones de tipos de datos privados ============================ */
 
-/* === Definiciones de variables privadas ================================== */
-static struct digital_output_s instance;
 
+/* === Definiciones de variables privadas ================================== */
+
+
+struct digital_output_s{
+    uint8_t gpio;
+    uint8_t bit;
+    bool allocated;
+};
 
 
 /* === Definiciones de variables publicas ================================== */
 
+
+
+/* === Declaraciones de funciones privadas ================================= */
+
+static struct digital_output_s instance[OUTPUT_INSTANCE] = {0};
+
+/* === Definiciones de funciones privadas ================================== */
+
+digital_output_t DigitalOutputAllocated(void){
+    digital_output_t output = null; 
+
+    for(int index = 0; index < OUTPUT_INSTANCE; index++){
+        if (instance[index].allocated == false) {
+            instance[index].allocated = true;
+            output = &instance[index];
+            break;
+        }        
+    }
+    return output;
+}
+
+/* === Definiciones de funciones publicas ================================== */
+
 digital_output_t DigitalOutputCreate(uint8_t gpio, uint8_t bit){
+    digital_output_t output = DigitalOutputAllocated();
+    
+    if (output) {
+        output->gpio = gpio;
+        output->bit = bit;
+        Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->gpio, output->bit, false);
+        Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, output->gpio, output->bit, true);
+
+    }
+
     instance.gpio = gpio;
     instance.bit = bit;
-    return &instance;
+    
+
+    return output;
 }
 void DigitalOutputActivate(digital_output_t output){
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->gpio, output->bit,true);
@@ -86,11 +125,9 @@ void DigitalOutputDeactivate(digital_output_t output){
 void DigitalOutputToggle(digital_output_t output){
 }
 
-/* === Declaraciones de funciones privadas ================================= */
-
-/* === Definiciones de funciones privadas ================================== */
-
-/* === Definiciones de funciones publicas ================================== */
+void DigitalOutputToggle(digital_output_t output){
+    Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, output->gpio, output->bit,false);
+}
 
 /* === Ciere de documentacion ============================================== */
 
