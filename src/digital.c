@@ -84,7 +84,7 @@ static struct digital_output_s instance[OUTPUT_INSTANCE] = {0};
 /* === Definiciones de funciones privadas ================================== */
 
 digital_output_t DigitalOutputAllocated(void){
-    digital_output_t output = null; 
+    digital_output_t output = NULL; 
 
     for(int index = 0; index < OUTPUT_INSTANCE; index++){
         if (instance[index].allocated == false) {
@@ -97,7 +97,7 @@ digital_output_t DigitalOutputAllocated(void){
 }
 
 /* === Definiciones de funciones publicas ================================== */
-
+// OUTPUT -----------------------
 digital_output_t DigitalOutputCreate(uint8_t gpio, uint8_t bit){
     digital_output_t output = DigitalOutputAllocated();
     
@@ -109,9 +109,6 @@ digital_output_t DigitalOutputCreate(uint8_t gpio, uint8_t bit){
 
     }
 
-    instance.gpio = gpio;
-    instance.bit = bit;
-    
 
     return output;
 }
@@ -122,12 +119,14 @@ void DigitalOutputActivate(digital_output_t output){
 void DigitalOutputDeactivate(digital_output_t output){
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, output->gpio, output->bit,false);
 }
-void DigitalOutputToggle(digital_output_t output){
+void DigitalOutputToggle(digital_output_t output) {
+
 }
 
-void DigitalOutputToggle(digital_output_t output){
-    Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, output->gpio, output->bit,false);
-}
+/*
+// INPUT ---------------------------------
+
+
 
 /* === Ciere de documentacion ============================================== */
 
