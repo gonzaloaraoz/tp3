@@ -59,6 +59,9 @@
  #define OUTPUT_INSTANCE 4
 #endif
 
+#ifndef INPUT_INSTANCE
+ #define INPUT_INSTANCE 5
+#endif
 
 /* === Declaraciones de tipos de datos privados ============================ */
 
@@ -72,14 +75,29 @@ struct digital_output_s{
     bool allocated;
 };
 
+struct digital_input_s{
+    uint8_t port;
+    uint8_t pin;
+    bool allocated;
+    bool last_state;
+};
+
 
 /* === Definiciones de variables publicas ================================== */
 
+bool DigitalInputGetState(digital_input_t input);
+bool DigitalInputHasChanged(digital_input_t input);
+bool DigitalInputHasAvtivated(digital_input_t input);
+bool DigitalInputHasDeactivated(digital_input_t input);
 
+bool current_state, last_state = false;
 
 /* === Declaraciones de funciones privadas ================================= */
 
-static struct digital_output_s instance[OUTPUT_INSTANCE] = {0};
+static struct digital_output_s instance_output[OUTPUT_INSTANCE] = {0};
+static struct digital_input_s instance_input[INPUT_INSTANCE] = {0};
+
+
 
 /* === Definiciones de funciones privadas ================================== */
 
@@ -87,16 +105,69 @@ digital_output_t DigitalOutputAllocated(void){
     digital_output_t output = NULL; 
 
     for(int index = 0; index < OUTPUT_INSTANCE; index++){
-        if (instance[index].allocated == false) {
-            instance[index].allocated = true;
-            output = &instance[index];
+        if (instance_output[index].allocated == false) {
+            instance_output[index].allocated = true;
+            output = &instance_output[index];
             break;
         }        
     }
     return output;
 }
 
+digital_input_t DigitalInputAllocated(void){
+    digital_input_t input = NULL; 
+
+    for(int index = 0; index < INPUT_INSTANCE; index++){
+        if (instance_input[index].allocated == false) {
+            instance_input[index].allocated = true;
+            input = &instance_input[index];
+            break;
+        }        
+    }
+    return input;
+}
+
+
+
 /* === Definiciones de funciones publicas ================================== */
+digital_input_t DigitalInputCreate(uint8_t port, uint8_t pin, bool inverted){
+    digital_input_t input = DigitalInputAllocated();
+    
+    if (input) {
+        input->port = port;
+        input->pin = pin;
+        Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, input->port, input->pin);
+    }
+
+    return input;
+}
+
+bool DigitalInputGetState(digital_input_t input){
+    return input->allocated ^ Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, input->port, input->pin);
+}
+
+bool DigitalInputHasChanged(digital_input_t input){
+    bool state = DigitalInputGetState(input);
+    bool result = state != input->last_state;
+    input->last_state = state;
+    return result;
+}
+
+bool DigitalInputHasActivated(digital_input_t input){
+    bool state = DigitalInputGetState(input);
+    bool result = state && !input->last_state;
+    input->last_state = state;
+    return result;
+}
+
+bool DigitalInputHasDeactivated(digital_input_t input){
+    bool state = DigitalInputGetState(input);
+    bool result = !state && !input->last_state;
+    input->last_state = state;
+    return result;
+}
+
+
 // OUTPUT -----------------------
 digital_output_t DigitalOutputCreate(uint8_t gpio, uint8_t bit){
     digital_output_t output = DigitalOutputAllocated();
@@ -122,11 +193,6 @@ void DigitalOutputDeactivate(digital_output_t output){
 void DigitalOutputToggle(digital_output_t output) {
 
 }
-
-/*
-// INPUT ---------------------------------
-
-
 
 /* === Ciere de documentacion ============================================== */
 

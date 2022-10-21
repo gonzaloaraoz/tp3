@@ -123,7 +123,7 @@
 int main(void) {
 
     int divisor  = 0;
-    bool current_state, last_state = false;
+   // bool current_state, last_state = false;
 
     Chip_SCU_PinMuxSet(LED_R_PORT, LED_R_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_R_FUNC);
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_R_GPIO, LED_R_BIT, false);
@@ -169,12 +169,15 @@ int main(void) {
     digital_output_t led_dos = DigitalOutputCreate(LED_2_GPIO, LED_2_BIT );
     digital_output_t led_tres = DigitalOutputCreate(LED_3_GPIO, LED_3_BIT );
 
-
-
+    digital_input_t boton_prueba   = DigitalInputCreate(TEC_1_GPIO, TEC_1_BIT, true );
+    digital_input_t boton_cambiar  = DigitalInputCreate(TEC_2_GPIO, TEC_2_BIT, true);
+    digital_input_t boton_prender  = DigitalInputCreate(TEC_3_GPIO, TEC_3_BIT, true );
+    digital_input_t boton_apagar   = DigitalInputCreate(TEC_4_GPIO, TEC_4_BIT, true );
 
 
     while (true) {
-        if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_1_GPIO, TEC_1_BIT) == 0) {
+        //if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_1_GPIO, TEC_1_BIT) == 0) {
+        if (DigitalInputGetState(boton_prueba)) {
             DigitalOutputActivate(led_azul);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, true);
         } else {
@@ -182,19 +185,24 @@ int main(void) {
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, false);
         }
      
-
-        current_state = (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_2_GPIO, TEC_2_BIT) == 0);
-        if ((current_state) && (!last_state)) {
+        //current_state = (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_2_GPIO, TEC_2_BIT) == 0);
+        //if ((current_state) && (!last_state)) {
+        if (DigitalInputHasActivated(boton_cambiar)) {
             DigitalOutputToggle(led_uno);
             //Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, LED_1_GPIO, LED_1_BIT);
         }
-        last_state = current_state;
+        //last_state = current_state;
 
-        if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_3_GPIO, TEC_3_BIT) == 0) {
+        //if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_3_GPIO, TEC_3_BIT) == 0) {
+        if (DigitalInputGetState(boton_prender)) {
             DigitalOutputActivate(led_dos);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_2_GPIO, LED_2_BIT, true);
         }
 
+        if (DigitalInputGetState(boton_apagar)) {
+            DigitalOutputDeactivate(led_dos);
+            //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_2_GPIO, LED_2_BIT, true);
+        }
       
         divisor++;
         if (divisor == 5) {
