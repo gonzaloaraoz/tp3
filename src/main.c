@@ -40,12 +40,13 @@
 
 /* === Headers files inclusions =============================================================== */
 
-#include <chip.h>
+//#include <chip.h>
 #include <digital.h>
+#include <bsp.h>
 #include <stdbool.h>
 
 /* === Macros definitions ====================================================================== */
-
+/*
 #define LED_R_PORT 2
 #define LED_R_PIN 0
 #define LED_R_FUNC SCU_MODE_FUNC4
@@ -105,6 +106,7 @@
 #define TEC_4_FUNC SCU_MODE_FUNC0
 #define TEC_4_GPIO 1
 #define TEC_4_BIT 9
+*/
 
 /* === Private data type declarations ========================================================== */
 
@@ -123,8 +125,9 @@
 int main(void) {
 
     int divisor  = 0;
+    board_t board= BoardCreate();
    // bool current_state, last_state = false;
-
+    /*
     Chip_SCU_PinMuxSet(LED_R_PORT, LED_R_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_R_FUNC);
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_R_GPIO, LED_R_BIT, false);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, LED_R_GPIO, LED_R_BIT, true);
@@ -137,7 +140,7 @@ int main(void) {
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, false);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, true);
 
-    /******************/
+   
     Chip_SCU_PinMuxSet(LED_1_PORT, LED_1_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_1_FUNC);
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_1_GPIO, LED_1_BIT, false);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, LED_1_GPIO, LED_1_BIT, true);
@@ -150,7 +153,7 @@ int main(void) {
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_3_GPIO, LED_3_BIT, false);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, LED_3_GPIO, LED_3_BIT, true);
 
-    /******************/
+   
     Chip_SCU_PinMuxSet(TEC_1_PORT, TEC_1_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | TEC_1_FUNC);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, TEC_1_GPIO, TEC_1_BIT, false);
 
@@ -173,41 +176,41 @@ int main(void) {
     digital_input_t boton_cambiar  = DigitalInputCreate(TEC_2_GPIO, TEC_2_BIT, true);
     digital_input_t boton_prender  = DigitalInputCreate(TEC_3_GPIO, TEC_3_BIT, true );
     digital_input_t boton_apagar   = DigitalInputCreate(TEC_4_GPIO, TEC_4_BIT, true );
-
+    */
 
     while (true) {
         //if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_1_GPIO, TEC_1_BIT) == 0) {
-        if (DigitalInputGetState(boton_prueba)) {
-            DigitalOutputActivate(led_azul);
+        if (DigitalInputGetState(board->boton_prueba)) {
+            DigitalOutputActivate(board->led_azul);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, true);
         } else {
-            DigitalOutputDeactivate(led_azul);
+            DigitalOutputDeactivate(board->led_azul);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_B_GPIO, LED_B_BIT, false);
         }
      
         //current_state = (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_2_GPIO, TEC_2_BIT) == 0);
         //if ((current_state) && (!last_state)) {
-        if (DigitalInputHasActivated(boton_cambiar)) {
-            DigitalOutputToggle(led_uno);
+        if (DigitalInputHasActivated(board->boton_cambiar)) {
+            DigitalOutputToggle(board->led_rojo);
             //Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, LED_1_GPIO, LED_1_BIT);
         }
         //last_state = current_state;
 
         //if (Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, TEC_3_GPIO, TEC_3_BIT) == 0) {
-        if (DigitalInputGetState(boton_prender)) {
-            DigitalOutputActivate(led_dos);
+        if (DigitalInputGetState(board->boton_prender)) {
+            DigitalOutputActivate(board->led_amarillo);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_2_GPIO, LED_2_BIT, true);
         }
 
-        if (DigitalInputGetState(boton_apagar)) {
-            DigitalOutputDeactivate(led_dos);
+        if (DigitalInputGetState(board->boton_apagar)) {
+            DigitalOutputDeactivate(board->led_amarillo);
             //Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_2_GPIO, LED_2_BIT, true);
         }
       
         divisor++;
         if (divisor == 5) {
             divisor = 0;
-            DigitalOutputToggle(led_tres);
+            DigitalOutputToggle(board->led_verde);
             //Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, LED_3_GPIO, LED_3_BIT);
         }
 
