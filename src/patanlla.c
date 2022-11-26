@@ -32,62 +32,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef BSP_H   /*! @cond    */
-#define BSP_H   /*! @endcond */
-
-/** @file bsp.h
+/** @file pantalla.c
  **
- ** @brief Plantilla de archivos de cabecera 
+ ** @brief pantalla de archivos fuente
  **
- ** Plantilla para los archivos de cabeceras de las prácticos de las 
+ ** Plantilla para los archivos de codigo fuente de prácticos de las 
  ** asignaturas Diseño Integrado de Sistemas Emebebidos y Sistemas Embebidos
  ** de Tiempo Real dictadas en de la Especialización en Integración de
  ** Sistemas Informaticos de la Univesidad Nacional de Tucumán
  ** 
  ** | RV | YYYY.MM.DD | Autor       | Descripción de los cambios              |
  ** |----|------------|-------------|-----------------------------------------|
- ** |  1 | 2022.08.27 | evolentini  | Version inicial del archivo             |
+ ** |  1 | 2022.08.27 | araoz  | Version inicial del archivo             |
  ** 
- ** @defgroup plantilla Plantilals de Archivos
- ** @brief Plantillas de archivos normalizadas
+ ** @defgroup pantalla Plantilals de Archivos
+ ** @brief pantalla de archivos normalizadas
  ** @{ 
  */
 
-/* === Inclusiones de archivos externos ==================================== */
-#include <digital.h>
+/* === Inclusiones de cabeceras ============================================ */
+#include "pantalla.h"
 
+/* === Definicion y Macros privados ======================================== */
 
-/* === Cabecera C++ ======================================================== */
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* === Declaraciones de tipos de datos privados ============================ */
 
-/* === Definicion y Macros publicos ======================================== */
+/* === Definiciones de variables privadas ================================== */
 
-/* == Declaraciones de tipos de datos publicos ============================= */
-typedef struct board_s {
-    digital_output_t buzzer;
-    digital_input_t set_time;
-    digital_input_t set_alarm;
-    digital_input_t decrement;
-    digital_input_t increment;
-    digital_input_t accept;
-    digital_input_t cancel;
-} const * const board_t; 
+/* === Definiciones de variables publicas ================================== */
 
+/* === Declaraciones de funciones privadas ================================= */
 
+/* === Definiciones de funciones privadas ================================== */
 
-/* === Declaraciones de variables publicas ================================= */
-
-/* === Declaraciones de funciones publicas ================================= */
-board_t BoardCreate(void);
-
+/* === Definiciones de funciones publicas ================================== */
 
 /* === Ciere de documentacion ============================================== */
-#ifdef __cplusplus
-}
-#endif
 
 /** @} Final de la definición del modulo para doxygen */
-
-#endif   /* BSP_H */

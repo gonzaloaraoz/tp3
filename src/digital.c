@@ -60,7 +60,7 @@
 #endif
 
 #ifndef INPUT_INSTANCE
- #define INPUT_INSTANCE 5
+ #define INPUT_INSTANCE 6
 #endif
 
 /* === Declaraciones de tipos de datos privados ============================ */
