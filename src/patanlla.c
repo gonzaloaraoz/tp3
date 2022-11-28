@@ -114,7 +114,9 @@ void SelectDigit(uint8_t digit) {
 
 
 display_t DisplayCreate(uint8_t digits){
-    display_t display = instances;
+    display_t display = 
+    
+    instances;
 
     display->digits = digits; 
     display->activate_digit = digits - 1; 

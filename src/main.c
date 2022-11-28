@@ -41,40 +41,20 @@
 /* === Headers files inclusions =============================================================== */
 
 //#include <chip.h>
-#include <digital.h>
+//#include <digital.h>
 #include <bsp.h>
 #include <stdbool.h>
+#include <pantalla.h>
 
-#include <poncho.h>
-#include <chip.h>
+
 /* === Macros definitions ====================================================================== */
-#define SEGMENT_A (1 << 0)
-#define SEGMENT_B (1 << 1)
-#define SEGMENT_C (1 << 2)
-#define SEGMENT_D (1 << 3)
-#define SEGMENT_E (1 << 4)
-#define SEGMENT_F (1 << 5)
-#define SEGMENT_G (1 << 6)
-#define SEGMENT_P (1 << 7)
+
 
 /* === Private data type declarations ========================================================== */
 
 /* === Private variable declarations =========================================================== */
 
 /* === Private function declarations =========================================================== */
-static const uint8_t IMAGES[] = {
-    SEGMENT_A + SEGMENT_B + SEGMENT_C + SEGMENT_D + SEGMENT_E + SEGMENT_F, //! < 0
-    SEGMENT_B + SEGMENT_C, //! < 1
-    SEGMENT_A + SEGMENT_B + SEGMENT_D + SEGMENT_E + SEGMENT_G, //! < 2
-    SEGMENT_A + SEGMENT_B + SEGMENT_C + SEGMENT_D + SEGMENT_G, //! < 3
-    SEGMENT_B + SEGMENT_C + SEGMENT_F + SEGMENT_G , //! < 4
-    SEGMENT_A + SEGMENT_C + SEGMENT_D + SEGMENT_F + SEGMENT_G, //! < 5
-    SEGMENT_A + SEGMENT_C + SEGMENT_D + SEGMENT_E + SEGMENT_F + SEGMENT_G, //! < 6
-    SEGMENT_A + SEGMENT_B + SEGMENT_C, //! < 7
-    SEGMENT_A + SEGMENT_B + SEGMENT_C + SEGMENT_D + SEGMENT_E + SEGMENT_F + SEGMENT_G , //! < 8
-    SEGMENT_A + SEGMENT_B + SEGMENT_C + SEGMENT_F + SEGMENT_G //! < 9
-
-};
 
 
 /* === Public variable definitions ============================================================= */
@@ -82,18 +62,6 @@ static const uint8_t IMAGES[] = {
 /* === Private variable definitions ============================================================ */
 
 /* === Private function implementation ========================================================= */
-void ScreenOff() {
-    Chip_GPIO_ClearValue(LPC_GPIO_PORT, DIGITS_GPIO, DIGITS_MASK );
-    Chip_GPIO_ClearValue(LPC_GPIO_PORT, SEGMENTS_GPIO, SEGMENTS_MASK );
-}
-
-void WriteNumher(uint8_t number) {
-    Chip_GPIO_SetValue(LPC_GPIO_PORT, SEGMENTS_GPIO, IMAGES[number]);    
-}
-
-void SelectDigit(uint8_t digit) {
-    Chip_GPIO_SetValue(LPC_GPIO_PORT, DIGITS_GPIO, (1<< digit));    
-}
 
 
 
@@ -102,11 +70,13 @@ void SelectDigit(uint8_t digit) {
 int main(void) {
     
     //uint8_t valor = 0;
-    uint8_t actual = 0;
+    //uint8_t actual = 0;
     //bool refrescar = true;
+    uint8_t numero[4]={1,2,3,4};
+
     board_t board= BoardCreate();
-    
-    uint8_t screen[4]={1,2,3,4};
+    display_t display = DisplayCreae(4);
+    DisplayWriteBCD(display, numero, sizeof(numero));
 
     //WriteNumher(0);
     //SelectDigit(0);
@@ -115,20 +85,16 @@ int main(void) {
     //Chip_GPIO_SetPinState(LPC_GPIO_PORT, DIGIT_2_GPIO, DIGIT_2_BIT, true);
 
     while (true) {
-        //if (refrescar) {
-        //    refrescar=false;
-            ScreenOff();
-            WriteNumher(screen[actual]);
-            SelectDigit(actual);
-        //}
+       DisplayRefresh(display);
 
+        /*
         if (actual == 3 ) {
                 actual = 0;
             } else {
                 actual = actual + 1;
             }
   
-/*
+
         if (DigitalInputHasActivated(board->set_time)) {
             if (valor == 9 ) {
                 valor = 0;
