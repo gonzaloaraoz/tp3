@@ -54,6 +54,8 @@
  */
 
 /* === Inclusiones de archivos externos ==================================== */
+#include <stdint.h>
+
 
 /* === Cabecera C++ ======================================================== */
 #ifdef __cplusplus
@@ -61,10 +63,27 @@ extern "C" {
 #endif
 
 /* === Definicion y Macros publicos ======================================== */
-
+// Definicion de bits asociados a cada segmento para contruir los digitos
+#define SEGMENT_A (1 << 0)
+#define SEGMENT_B (1 << 1)
+#define SEGMENT_C (1 << 2)
+#define SEGMENT_D (1 << 3)
+#define SEGMENT_E (1 << 4)
+#define SEGMENT_F (1 << 5)
+#define SEGMENT_G (1 << 6)
+#define SEGMENT_P (1 << 7)
 /* == Declaraciones de tipos de datos publicos ============================= */
 
+//Referencia a un descriptor para gestionar una pantalla de siete segmentos multiplezada
+typedef struct displays_s * display_t;
+
 /* === Declaraciones de variables publicas ================================= */
+
+display_t DisplayCreate(uint8_t digits);
+
+void DisplayWriteBCD(display_t display,uint8_t * number, uint8_t size);
+
+void DisplayRefresh(display_t display);
 
 /* === Declaraciones de funciones publicas ================================= */
 
