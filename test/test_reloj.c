@@ -18,11 +18,14 @@
 16) Si alarma se activa y pasan 23:59:59 no debe volver a activarse, pero si pasa un segundo mas entonces si se debe volver a activar
 17) Si la alarma esta inactiva no debe sonar cuando la hora del reloj coincida con la hora de la alarma
 */
+#define TICKS_PER_SECOND 5
+
 void test_hora_inicial_invalida(void) {
     static const uint8_t INICIAL[] = {1,2,3,4};
     static const uint8_t ESPERADO[] = {0,0,0,0,0,0};
     uint8_t hora[6];
-    clock_t reloj = ClockCreate(5);
-    TEST_ASSERT_FALSE(ClockGetTime(reloj, hora, 6));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora,6);
+    clock_t reloj = ClockCreate(TICKS_PER_SECOND);
+    ClockSetupTime(reloj,INICIAL, sizeof(INICIAL));
+    TEST_ASSERT_FALSE(ClockGetTime(reloj, hora, sizeof(hora)));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora,sizeof(ESPERADO));
 }
