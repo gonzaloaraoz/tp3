@@ -53,7 +53,7 @@
 /* === Inclusiones de cabeceras ============================================ */
 #include "pantalla.h"
 #include <poncho.h>
-#include <chip.h>
+//#include <chip.h>
 #include <string.h>
 
 
